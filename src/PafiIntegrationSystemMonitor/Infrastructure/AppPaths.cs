@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 namespace PafiIntegrationSystemMonitor.Infrastructure;
 
 public static class AppPaths
