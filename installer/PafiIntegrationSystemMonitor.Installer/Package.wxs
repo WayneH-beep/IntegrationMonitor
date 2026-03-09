@@ -36,8 +36,7 @@
       <RegistryValue Root="HKLM" Key="Software\Pafi\PafiIntegrationSystemMonitor" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
     </Component>
 
-    <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="610D02A2-CB22-402C-93F6-9E8C8F7A51DF">
-      <Condition><![CDATA[INSTALLDESKTOPSHORTCUT=1]]></Condition>
+    <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="610D02A2-CB22-402C-93F6-9E8C8F7A51DF" Condition="INSTALLDESKTOPSHORTCUT=1">
       <Shortcut Id="ApplicationDesktopShortcut"
                 Name="Pafi Integration System Monitor"
                 Description="Monitor services, devices, and TCP endpoints"
