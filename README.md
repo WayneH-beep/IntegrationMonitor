@@ -71,14 +71,14 @@ MSI output:
 - Supports major upgrades through stable `UpgradeCode`
 
 
-## WiX harvesting troubleshooting
-If installer build reports many `HEAT5151` warnings/errors while harvesting the publish folder:
+## WiX packaging troubleshooting
+If installer build fails with missing-file errors (for example a runtime DLL under `publish`):
 1. Ensure the app publish step ran first for the same configuration/runtime (`Release`, `win-x64`).
 2. Build the installer with the same configuration:
    ```powershell
    dotnet build .\installer\PafiIntegrationSystemMonitor.Installer\PafiIntegrationSystemMonitor.Installer.wixproj -c Release
    ```
-3. The installer project is configured to harvest files only and suppress COM/registry harvesting, which avoids reflection-related failures on runtime files from self-contained .NET publish output.
+3. The installer now uses WiX `Files Include="$(var.PublishDir)**"` file globbing directly from the publish folder (no Heat pre-harvest step), which avoids stale harvested manifests and reduces path-not-found failures.
 
 ## Notes
 - Service restart requires appropriate Windows permissions.

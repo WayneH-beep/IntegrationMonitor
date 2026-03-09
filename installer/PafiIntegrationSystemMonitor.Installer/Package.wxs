@@ -15,6 +15,10 @@
       <Directory Id="ProgramMenuDir" Name="Pafi Integration System Monitor" />
     </StandardDirectory>
 
+    <ComponentGroup Id="HarvestedApplicationFiles" Directory="INSTALLFOLDER">
+      <Files Include="$(var.PublishDir)**" />
+    </ComponentGroup>
+
     <Feature Id="MainFeature" Title="Pafi Integration System Monitor" Level="1">
       <ComponentGroupRef Id="HarvestedApplicationFiles" />
       <ComponentRef Id="StartMenuShortcutComponent" />

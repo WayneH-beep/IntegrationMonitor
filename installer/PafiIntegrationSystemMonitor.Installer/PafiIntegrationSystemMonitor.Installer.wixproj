@@ -8,23 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WixToolset.Heat" Version="4.0.4" />
     <PackageReference Include="WixToolset.UI.wixext" Version="4.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <HarvestDirectory Include="$(MSBuildThisFileDirectory)..\..\src\PafiIntegrationSystemMonitor\bin\$(Configuration)\net8.0-windows\win-x64\publish">
-      <ComponentGroupName>HarvestedApplicationFiles</ComponentGroupName>
-      <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
-      <SuppressRootDirectory>true</SuppressRootDirectory>
-      <SuppressCom>true</SuppressCom>
-      <SuppressRegistry>true</SuppressRegistry>
-      <SuppressFragments>true</SuppressFragments>
-      <AutogenerateGuids>true</AutogenerateGuids>
-      <GenerateGuidsNow>false</GenerateGuidsNow>
-      <PreprocessorVariable>var.PublishDir</PreprocessorVariable>
-      <HarvestType>File</HarvestType>
-      <KeepEmptyDirectories>false</KeepEmptyDirectories>
-    </HarvestDirectory>
   </ItemGroup>
 </Project>
