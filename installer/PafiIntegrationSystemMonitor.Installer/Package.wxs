@@ -1,0 +1,52 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="Pafi Integration System Monitor"
+           Manufacturer="Pafi"
+           Version="$(var.ProductVersion)"
+           UpgradeCode="B02CF44B-9380-4D46-95D3-FF5213BEB8D5"
+           Scope="perMachine"
+           InstallerVersion="500"
+           Compressed="yes">
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Pafi Integration System Monitor" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuDir" Name="Pafi Integration System Monitor" />
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="Pafi Integration System Monitor" Level="1">
+      <ComponentGroupRef Id="HarvestedApplicationFiles" />
+      <ComponentRef Id="StartMenuShortcutComponent" />
+      <ComponentRef Id="DesktopShortcutComponent" />
+    </Feature>
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+    <Icon Id="AppIcon" SourceFile="$(var.PublishDir)PafiIntegrationSystemMonitor.exe" />
+
+    <Component Id="StartMenuShortcutComponent" Directory="ProgramMenuDir" Guid="D641DE7F-8B4E-4B64-BFEB-7079EA4A5D3E">
+      <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="Pafi Integration System Monitor"
+                Description="Monitor services, devices, and TCP endpoints"
+                Target="[INSTALLFOLDER]PafiIntegrationSystemMonitor.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="AppIcon" />
+      <RemoveFolder Id="RemoveProgramMenuDir" On="uninstall" />
+      <RegistryValue Root="HKLM" Key="Software\Pafi\PafiIntegrationSystemMonitor" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="610D02A2-CB22-402C-93F6-9E8C8F7A51DF">
+      <Condition><![CDATA[INSTALLDESKTOPSHORTCUT=1]]></Condition>
+      <Shortcut Id="ApplicationDesktopShortcut"
+                Name="Pafi Integration System Monitor"
+                Description="Monitor services, devices, and TCP endpoints"
+                Target="[INSTALLFOLDER]PafiIntegrationSystemMonitor.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="AppIcon" />
+      <RegistryValue Root="HKLM" Key="Software\Pafi\PafiIntegrationSystemMonitor" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <Property Id="INSTALLDESKTOPSHORTCUT" Value="0" />
+  </Package>
+</Wix>

@@ -1,0 +1,21 @@
+<Project Sdk="WixToolset.Sdk/4.0.4">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <Platform>x64</Platform>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <DefineConstants>ProductVersion=1.0.0;PublishDir=$(MSBuildThisFileDirectory)..\..\src\PafiIntegrationSystemMonitor\bin\$(Configuration)\net8.0-windows\win-x64\publish\</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="4.0.4" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <HarvestDirectory Include="$(MSBuildThisFileDirectory)..\..\src\PafiIntegrationSystemMonitor\bin\$(Configuration)\net8.0-windows\win-x64\publish">
+      <ComponentGroupName>HarvestedApplicationFiles</ComponentGroupName>
+      <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+    </HarvestDirectory>
+  </ItemGroup>
+</Project>
