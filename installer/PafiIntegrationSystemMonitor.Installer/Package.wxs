@@ -16,7 +16,9 @@
     </StandardDirectory>
 
     <ComponentGroup Id="HarvestedApplicationFiles" Directory="INSTALLFOLDER">
-      <Files Include="$(var.PublishDir)**" />
+      <Component Id="PublishedFilesComponent" Guid="A7C1337E-034B-4E71-9690-DF0D1A881E6E" Bitness="always64">
+        <Files Include="$(var.PublishDir)**" />
+      </Component>
     </ComponentGroup>
 
     <Feature Id="MainFeature" Title="Pafi Integration System Monitor" Level="1">
