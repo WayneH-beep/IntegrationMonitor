@@ -1,0 +1,86 @@
+{
+  "defaultPollIntervalSeconds": 10,
+  "defaultTimeoutMilliseconds": 3000,
+  "startMinimizedToTray": false,
+  "enableDesktopNotifications": true,
+  "groups": [
+    {
+      "name": "Lenel/KONE Integration",
+      "healthRule": "CriticalWithRoleAwareness"
+    },
+    {
+      "name": "ACS Core Services",
+      "healthRule": "CriticalOnly"
+    }
+  ],
+  "items": [
+    {
+      "friendlyName": "OpenAccess",
+      "type": "Service",
+      "target": "OpenAccess",
+      "isCritical": true,
+      "isEnabled": true,
+      "groupName": "ACS Core Services",
+      "role": "Standalone",
+      "pairKey": "",
+      "pollIntervalSeconds": 10,
+      "timeoutMilliseconds": 3000
+    },
+    {
+      "friendlyName": "LS KoneGroupController",
+      "type": "Service",
+      "target": "LS KoneGroupController",
+      "isCritical": true,
+      "isEnabled": true,
+      "groupName": "Lenel/KONE Integration",
+      "role": "Standalone",
+      "pairKey": "",
+      "pollIntervalSeconds": 10,
+      "timeoutMilliseconds": 3000
+    },
+    {
+      "friendlyName": "KONE Group 1 Primary TCP 2005",
+      "type": "TcpEndpoint",
+      "target": "10.10.1.25",
+      "port": 2005,
+      "isCritical": true,
+      "isEnabled": true,
+      "groupName": "Lenel/KONE Integration",
+      "role": "Primary",
+      "pairKey": "KONE-G1"
+    },
+    {
+      "friendlyName": "KONE Group 1 Secondary TCP 2005",
+      "type": "TcpEndpoint",
+      "target": "10.10.1.26",
+      "port": 2005,
+      "isCritical": true,
+      "isEnabled": true,
+      "groupName": "Lenel/KONE Integration",
+      "role": "Secondary",
+      "pairKey": "KONE-G1"
+    },
+    {
+      "friendlyName": "KONE Group 2 Primary TCP 2005",
+      "type": "TcpEndpoint",
+      "target": "10.10.2.25",
+      "port": 2005,
+      "isCritical": true,
+      "isEnabled": true,
+      "groupName": "Lenel/KONE Integration",
+      "role": "Primary",
+      "pairKey": "KONE-G2"
+    },
+    {
+      "friendlyName": "KONE Group 2 Secondary TCP 2005",
+      "type": "TcpEndpoint",
+      "target": "10.10.2.26",
+      "port": 2005,
+      "isCritical": true,
+      "isEnabled": true,
+      "groupName": "Lenel/KONE Integration",
+      "role": "Secondary",
+      "pairKey": "KONE-G2"
+    }
+  ]
+}

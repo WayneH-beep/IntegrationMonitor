@@ -1,0 +1,209 @@
+<Window x:Class="PafiIntegrationSystemMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:PafiIntegrationSystemMonitor.Models"
+        xmlns:converters="clr-namespace:PafiIntegrationSystemMonitor.Converters"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        mc:Ignorable="d"
+        Title="Pafi Integration System Monitor"
+        Width="1400"
+        Height="860"
+        MinWidth="1100"
+        MinHeight="700">
+
+    <Window.Resources>
+        <converters:StatusBrushConverter x:Key="StatusBrushConverter"/>
+
+        <ObjectDataProvider x:Key="ItemTypeValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:MonitoredItemType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="RoleValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:EndpointRole"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="GroupRuleValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:GroupHealthRuleType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
+    <DockPanel Margin="12">
+        <TextBlock DockPanel.Dock="Top" Text="Pafi Integration System Monitor" FontSize="26" FontWeight="Bold" Margin="0,0,0,8"/>
+        <TabControl>
+            <TabItem Header="Status">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <UniformGrid Columns="5" Margin="0,0,0,8">
+                        <Border Margin="4" Padding="12" Background="#EEF4FF"><StackPanel><TextBlock Text="Total"/><TextBlock Text="{Binding TotalItems}" FontSize="22" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Margin="4" Padding="12" Background="#EDFCF3"><StackPanel><TextBlock Text="Healthy"/><TextBlock Text="{Binding HealthyCount}" FontSize="22" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Margin="4" Padding="12" Background="#FFF9ED"><StackPanel><TextBlock Text="Warning"/><TextBlock Text="{Binding WarningCount}" FontSize="22" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Margin="4" Padding="12" Background="#FFEFEF"><StackPanel><TextBlock Text="Failed"/><TextBlock Text="{Binding FailedCount}" FontSize="22" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Margin="4" Padding="12" Background="#F0F0F0"><StackPanel><TextBlock Text="Unknown"/><TextBlock Text="{Binding UnknownCount}" FontSize="22" FontWeight="SemiBold"/></StackPanel></Border>
+                    </UniformGrid>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Manual Refresh" Command="{Binding RefreshNowCommand}" Padding="14,5"/>
+                        <Button Content="Restart Selected Service" Command="{Binding RestartSelectedServiceCommand}" Margin="8,0,0,0" Padding="14,5" IsEnabled="{Binding CanRestartService}"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <ItemsControl ItemsSource="{Binding GroupStatuses}" Margin="0,0,0,8">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#222" BorderThickness="1" Margin="4" Padding="12" Width="260" ToolTip="{Binding Detail}">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding GroupName}" FontWeight="Bold" FontSize="14"/>
+                                            <TextBlock Text="{Binding Status}" FontSize="30" FontWeight="Bold" Foreground="{Binding Status, Converter={StaticResource StatusBrushConverter}}"/>
+                                            <TextBlock Text="{Binding Detail}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <DataGrid Grid.Row="1"
+                                  ItemsSource="{Binding StatusItems}"
+                                  SelectedItem="{Binding SelectedStatusItem}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" Width="180"/>
+                                <DataGridTextColumn Header="Type" Binding="{Binding ItemType}" Width="100"/>
+                                <DataGridTextColumn Header="Group" Binding="{Binding GroupName}" Width="160"/>
+                                <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="100"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                                <DataGridTextColumn Header="Last Checked" Binding="{Binding LastChecked}" Width="170"/>
+                                <DataGridTextColumn Header="Last Changed" Binding="{Binding LastChanged}" Width="170"/>
+                                <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Config">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="Services" FontWeight="Bold" FontSize="16"/>
+                        <TextBox Margin="0,6,0,0" Text="{Binding ConfigViewModel.ServiceSearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ListBox ItemsSource="{Binding ConfigViewModel.AvailableServices}" SelectedItem="{Binding ConfigViewModel.SelectedDiscoveredService}" Height="250" Margin="0,6,0,0"/>
+                        <WrapPanel Margin="0,6,0,0">
+                            <Button Content="Refresh Services" Command="{Binding ConfigViewModel.RefreshServicesCommand}"/>
+                            <Button Content="Add Selected" Command="{Binding ConfigViewModel.AddSelectedServiceCommand}" Margin="6,0,0,0"/>
+                        </WrapPanel>
+
+                        <TextBlock Text="Manual Service Name" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <TextBox Text="{Binding ConfigViewModel.ManualServiceName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Content="Add Manual Service" Command="{Binding ConfigViewModel.AddManualServiceCommand}" Margin="0,6,0,0"/>
+
+                        <TextBlock Text="Quick Add" FontWeight="Bold" FontSize="16" Margin="0,12,0,0"/>
+                        <WrapPanel Margin="0,6,0,0">
+                            <Button Content="Add Device" Command="{Binding ConfigViewModel.AddDeviceCommand}"/>
+                            <Button Content="Add TCP Endpoint" Command="{Binding ConfigViewModel.AddTcpEndpointCommand}" Margin="6,0,0,0"/>
+                        </WrapPanel>
+
+                        <WrapPanel Margin="0,8,0,0">
+                            <Button Content="Move Up" Command="{Binding ConfigViewModel.MoveUpCommand}"/>
+                            <Button Content="Move Down" Command="{Binding ConfigViewModel.MoveDownCommand}" Margin="6,0,0,0"/>
+                            <Button Content="Delete Selected" Command="{Binding ConfigViewModel.DeleteItemCommand}" Margin="6,0,0,0"/>
+                        </WrapPanel>
+                        <Button Content="Save Configuration" Command="{Binding ConfigViewModel.SaveCommand}" Margin="0,10,0,0" Width="180"/>
+                    </StackPanel>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <DataGrid ItemsSource="{Binding ConfigViewModel.Items}"
+                                  SelectedItem="{Binding ConfigViewModel.SelectedItem}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="60"/>
+                                <DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" Width="170"/>
+                                <DataGridComboBoxColumn Header="Type" SelectedItemBinding="{Binding Type}" ItemsSource="{Binding Source={StaticResource ItemTypeValues}}" Width="110"/>
+                                <DataGridTextColumn Header="Target" Binding="{Binding Target}" Width="150"/>
+                                <DataGridTextColumn Header="Port" Binding="{Binding Port}" Width="60"/>
+                                <DataGridCheckBoxColumn Header="Critical" Binding="{Binding IsCritical}" Width="65"/>
+                                <DataGridTextColumn Header="Group" Binding="{Binding GroupName}" Width="120"/>
+                                <DataGridComboBoxColumn Header="Role" SelectedItemBinding="{Binding Role}" ItemsSource="{Binding Source={StaticResource RoleValues}}" Width="100"/>
+                                <DataGridTextColumn Header="Pair Key" Binding="{Binding PairKey}" Width="110"/>
+                                <DataGridTextColumn Header="Poll(s)" Binding="{Binding PollIntervalSeconds}" Width="65"/>
+                                <DataGridTextColumn Header="Timeout(ms)" Binding="{Binding TimeoutMilliseconds}" Width="90"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <GroupBox Grid.Row="1" Header="Groups / Integrations" Margin="0,10,0,0">
+                            <DockPanel>
+                                <Button DockPanel.Dock="Top" Content="Add Group" Margin="4" Click="AddGroup_Click" Width="110"/>
+                                <DataGrid ItemsSource="{Binding ConfigViewModel.Groups}" AutoGenerateColumns="False" CanUserAddRows="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Group Name" Binding="{Binding Name}" Width="*"/>
+                                        <DataGridComboBoxColumn Header="Health Rule" SelectedItemBinding="{Binding HealthRule}" ItemsSource="{Binding Source={StaticResource GroupRuleValues}}" Width="220"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="History">
+                <DockPanel Margin="8">
+                    <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <TextBox Width="140" Margin="0,0,6,0" ToolTip="Item filter" Text="{Binding HistoryViewModel.ItemFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Width="100" Margin="0,0,6,0" ToolTip="Type filter" Text="{Binding HistoryViewModel.TypeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Width="100" Margin="0,0,6,0" ToolTip="Status filter" Text="{Binding HistoryViewModel.StatusFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Width="130" Margin="0,0,6,0" ToolTip="Group filter" Text="{Binding HistoryViewModel.GroupFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DatePicker Width="130" Margin="0,0,6,0" SelectedDate="{Binding HistoryViewModel.DateFromUtc}"/>
+                        <DatePicker Width="130" Margin="0,0,6,0" SelectedDate="{Binding HistoryViewModel.DateToUtc}"/>
+                        <Button Content="Refresh" Command="{Binding HistoryViewModel.RefreshCommand}" Margin="0,0,6,0"/>
+                        <Button Content="Export CSV" Command="{Binding HistoryViewModel.ExportCsvCommand}"/>
+                    </WrapPanel>
+
+                    <DataGrid ItemsSource="{Binding HistoryViewModel.Records}" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Timestamp" Binding="{Binding TimestampUtc}" Width="180"/>
+                            <DataGridTextColumn Header="Item" Binding="{Binding ItemName}" Width="180"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding ItemType}" Width="100"/>
+                            <DataGridTextColumn Header="Previous" Binding="{Binding PreviousState}" Width="90"/>
+                            <DataGridTextColumn Header="New" Binding="{Binding NewState}" Width="90"/>
+                            <DataGridTextColumn Header="Group" Binding="{Binding GroupName}" Width="160"/>
+                            <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
