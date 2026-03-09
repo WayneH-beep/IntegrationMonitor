@@ -3,6 +3,7 @@
     <OutputType>Package</OutputType>
     <Platform>x64</Platform>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DefineConstants>ProductVersion=1.0.0;PublishDir=$(MSBuildThisFileDirectory)..\..\src\PafiIntegrationSystemMonitor\bin\$(Configuration)\net8.0-windows\win-x64\publish\</DefineConstants>
   </PropertyGroup>
 
@@ -16,6 +17,14 @@
       <ComponentGroupName>HarvestedApplicationFiles</ComponentGroupName>
       <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
       <SuppressRootDirectory>true</SuppressRootDirectory>
+      <SuppressCom>true</SuppressCom>
+      <SuppressRegistry>true</SuppressRegistry>
+      <SuppressFragments>true</SuppressFragments>
+      <AutogenerateGuids>true</AutogenerateGuids>
+      <GenerateGuidsNow>false</GenerateGuidsNow>
+      <PreprocessorVariable>var.PublishDir</PreprocessorVariable>
+      <HarvestType>File</HarvestType>
+      <KeepEmptyDirectories>false</KeepEmptyDirectories>
     </HarvestDirectory>
   </ItemGroup>
 </Project>
