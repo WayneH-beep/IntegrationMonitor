@@ -4,7 +4,7 @@
     <Platform>x64</Platform>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DefineConstants>ProductVersion=1.0.0;PublishDir=$(MSBuildThisFileDirectory)..\..\src\PafiIntegrationSystemMonitor\bin\$(Configuration)\net8.0-windows\win-x64\publish\</DefineConstants>
+    <DefineConstants>ProductVersion=1.0.0;PublishDir=$(MSBuildThisFileDirectory)..\..\src\PafiIntegrationSystemMonitor\bin\$(Configuration)\net8.0-windows\</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
